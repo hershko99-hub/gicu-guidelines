@@ -1,0 +1,9 @@
+{
+  "name": "Hadassah GICU Guidelines",
+  "short_name": "GICU",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}
