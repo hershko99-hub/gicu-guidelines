@@ -37,33 +37,29 @@ function baseLayout() {
 }
 
 function setCategoriesFromDocs() {
-  const desiredOrder = [
-    "Guidelines",
-    "Ventilation and Pulmonology",
-    "Hematology",
-    "Trauma",
-    "Neuro",
-    "Burns",
-    "infectious diseases",
-    "Toxicology",
-    "GI and liver",
-    "Endocrinology",
-    "Surgery",
-    "Nephro",
-    "Other"
-  ];
+  const set = new Set();
+  DOCS.forEach(d => {
+    const c = (d.category || "").trim();
+    if (c) set.add(c);
+  });
+  CATEGORIES = Array.from(set).sort((a, b) => a.localeCompare(b));
+}
 
-  const present = new Set(
-    DOCS.map(d => (d.category || "").trim()).filter(Boolean)
-  );
+function renderPills(pillsEl) {
+  function pill(name) {
+    const active = selectedCategory === name;
+    const p = el("span", { onclick: () => { selectedCategory = name; draw(); } }, [name]);
+    p.style.padding = "6px 10px";
+    p.style.borderRadius = "999px";
+    p.style.border = active ? "2px solid #111" : "1px solid #ddd";
+    p.style.cursor = "pointer";
+    p.style.userSelect = "none";
+    return p;
+  }
 
-  // Keep your preferred order first
-  const ordered = desiredOrder.filter(c => present.has(c));
-
-  // Add any unexpected categories at the end
-  const extras = Array.from(present).filter(c => !desiredOrder.includes(c)).sort((a,b)=>a.localeCompare(b));
-
-  CATEGORIES = [...ordered, ...extras];
+  pillsEl.innerHTML = "";
+  pillsEl.appendChild(pill("All"));
+  CATEGORIES.forEach((c) => pillsEl.appendChild(pill(c)));
 }
 
 function draw() {
@@ -110,14 +106,6 @@ function draw() {
     meta.style.opacity = "0.75";
     meta.style.marginTop = "6px";
     card.appendChild(meta);
-
-    if (d.summary) {
-      const s = el("div", {}, [d.summary]);
-      s.style.marginTop = "8px";
-      s.style.opacity = "0.85";
-      s.style.fontSize = "13px";
-      card.appendChild(s);
-    }
 
     list.appendChild(card);
   });
