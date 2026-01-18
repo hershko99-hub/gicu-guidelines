@@ -1,3 +1,4 @@
+const CACHE_NAME = "gicu-guidelines-v9";
 const CACHE_NAME = "gicu-pwa-v1";
 const STATIC_FILES = ["./", "./index.html", "./app.js", "./manifest.json"];
 
