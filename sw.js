@@ -1,5 +1,5 @@
 // Change VERSION on each release to force updates
-const VERSION = "v12";
+const VERSION = "v13";
 const CACHE_NAME = `gicu-guidelines-${VERSION}`;
 
 const APP_SHELL = [

@@ -139,5 +139,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   search.addEventListener("input", draw);
   refresh.addEventListener("click", loadDocs);
 
+  // Initial load
   await loadDocs();
+
+  // Refresh whenever the app becomes visible again (works well on iOS / PWA)
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      loadDocs();
+    }
+  });
+
+  // Also refresh when the page is shown from the back/forward cache (iOS Safari)
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      loadDocs();
+    }
+  });
 });
