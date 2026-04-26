@@ -114,7 +114,7 @@ footer{text-align:center;padding:1rem;font-size:12px;color:var(--text3);border-t
 <footer>Hadassah GICU &middot; For educational use only &middot; Links open external sources</footer>
 
 <script>
-const SHEET_ID = '15_SMjnqUksQsfZbkrlC2Z2IpY-npx7ykfpuffLLZwr8';
+const SHEET_ID = '2PACX-1vSVFBMm4ep0O4iPU2FYthAJrYiq1F-ufWOZ_vI-DNCLj-a_ZshQvOA1GfdyM2eZQaeFsVgl7VnTd5LI';
 const SHEET_NAME = 'Sheet1';
 
 const TAXONOMY = [
@@ -146,26 +146,52 @@ let activeFilter = 'all';
 let searchTerm = '';
 
 async function loadData() {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  const url = `https://docs.google.com/spreadsheets/d/e/${SHEET_ID}/pub?output=csv&gid=0`;
   try {
     const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const text = await res.text();
-    const json = JSON.parse(text.substring(47, text.length - 2));
-    const rows = json.table.rows;
-    ALL_DOCS = rows.map(r => ({
-      title:    r.c[0]?.v || '',
-      category: r.c[1]?.v || '',
-      sub:      r.c[2]?.v || '',
-      type:     (r.c[3]?.v || 'paper').toLowerCase(),
-      year:     r.c[4]?.v || '',
-      authors:  r.c[5]?.v || '',
-      url:      r.c[6]?.v || '',
-      pinned:   (r.c[7]?.v || '').toString().toLowerCase() === 'yes',
+    const rows = parseCSV(text);
+    if (rows.length <= 1) {
+      ALL_DOCS = [];
+      document.getElementById('content').innerHTML = '<div class="empty"><div style="font-size:2rem">&#128203;</div><p>No documents yet. Use the <a href="upload.html" style="color:var(--accent)">upload form</a> to add your first guideline.</p></div>';
+      return;
+    }
+    ALL_DOCS = rows.slice(1).map(r => ({
+      title:    r[0] || '',
+      category: r[1] || '',
+      sub:      r[2] || '',
+      type:     (r[3] || 'paper').toLowerCase(),
+      year:     r[4] || '',
+      authors:  r[5] || '',
+      url:      r[6] || '',
+      pinned:   (r[7] || '').toLowerCase() === 'yes',
     })).filter(d => d.title && d.url);
     render();
   } catch(e) {
-    document.getElementById('content').innerHTML = `<div class="error-box"><strong>Could not load data.</strong> Make sure your Google Sheet is published and the SHEET_ID is set correctly in index.html.<br><br>Error: ${e.message}</div>`;
+    document.getElementById('content').innerHTML = `<div class="error-box"><strong>Could not load data.</strong> Make sure the Google Sheet is published via File &rarr; Share &rarr; Publish to web.<br><br>Error: ${e.message}</div>`;
   }
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = '', inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"' && text[i+1] === '"') { field += '"'; i++; }
+      else if (ch === '"') { inQuotes = false; }
+      else { field += ch; }
+    } else {
+      if (ch === '"') { inQuotes = true; }
+      else if (ch === ',') { row.push(field); field = ''; }
+      else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = ''; }
+      else if (ch === '\r') {}
+      else { field += ch; }
+    }
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  return rows;
 }
 
 function buildTree() {
