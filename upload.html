@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Document — Hadassah GICU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f7;--surface:#fff;--border:#e2e5ea;--text:#1a1d23;--text2:#5a6172;--text3:#8a93a6;--accent:#0a4fa6;--accent-light:#e8f0fb;--warn:#b45309;--warn-light:#fef3c7;--success:#0d7a5f;--success-light:#e6f4f0;--danger:#991b1b;--danger-light:#fef2f2;--radius:10px;--radius-sm:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+header{background:var(--accent);color:#fff;padding:0 1rem}
+.header-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:12px;height:56px}
+.header-back{font-size:12px;color:rgba(255,255,255,.8);text-decoration:none;padding:4px 10px;border-radius:20px;border:1px solid rgba(255,255,255,.3);transition:background .15s}
+.header-back:hover{background:rgba(255,255,255,.15)}
+.header-title{font-size:16px;font-weight:600;flex:1}
+.main{max-width:640px;margin:0 auto;padding:1.5rem 1rem 4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+.card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+.field{margin-bottom:1rem}
+.field:last-child{margin-bottom:0}
+label{display:block;font-size:12px;font-weight:500;color:var(--text2);margin-bottom:5px;letter-spacing:.02em}
+label .req{color:#dc2626}
+input[type=text],input[type=number],input[type=url],input[type=password],select,textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;color:var(--text);background:var(--bg);outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);background:#fff}
+input::placeholder,textarea::placeholder{color:var(--text3)}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a93a6' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.row{grid-template-columns:1fr}}
+.hint{font-size:11px;color:var(--text3);margin-top:4px}
+.subcat-group{display:none}
+.subcat-group.visible{display:block}
+.pin-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--warn-light);border:1px solid #fcd34d;border-radius:var(--radius-sm)}
+.pin-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);flex-shrink:0}
+.pin-row label{font-size:13px;font-weight:500;color:var(--warn);margin:0;cursor:pointer}
+.pin-row small{font-size:11px;color:var(--warn);opacity:.8;display:block}
+.submit-btn{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:500;font-family:inherit;cursor:pointer;transition:opacity .15s}
+.submit-btn:hover{opacity:.88}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.toast{display:none;border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:1rem;font-size:14px}
+.toast.success{background:var(--success-light);border:1px solid #6ee7b7;color:var(--success)}
+.toast.error{background:var(--danger-light);border:1px solid #fca5a5;color:var(--danger)}
+.lock-screen{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:1rem}
+.lock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:340px;text-align:center}
+.lock-icon{font-size:2.5rem;margin-bottom:1rem}
+.lock-card h2{font-size:18px;font-weight:600;margin-bottom:.4rem}
+.lock-card p{font-size:13px;color:var(--text2);margin-bottom:1.5rem}
+.lock-card input{margin-bottom:.75rem;text-align:center;letter-spacing:.15em}
+.lock-btn{width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:500;font-family:inherit;cursor:pointer;transition:opacity .15s}
+.lock-btn:hover{opacity:.88}
+.lock-error{font-size:12px;color:var(--danger);margin-top:.5rem;display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="header-back">&#8592; Back</a>
+    <div class="header-title">Add document</div>
+  </div>
+</header>
+
+<div id="lock-screen" class="lock-screen">
+  <div class="lock-card">
+    <div class="lock-icon">&#128274;</div>
+    <h2>Editor access</h2>
+    <p>Enter the password to add or update guidelines</p>
+    <input type="password" id="pass-input" placeholder="Password" onkeydown="if(event.key==='Enter')checkPass()">
+    <button class="lock-btn" onclick="checkPass()">Continue</button>
+    <div class="lock-error" id="pass-error">Incorrect password</div>
+  </div>
+</div>
+
+<div id="form-screen" style="display:none">
+<div class="main">
+  <div id="toast" class="toast"></div>
+
+  <div class="card">
+    <div class="card-title">Document details</div>
+
+    <div class="field">
+      <label>Title <span class="req">*</span></label>
+      <input type="text" id="f-title" placeholder="e.g. Surviving Sepsis Campaign 2021 Guidelines">
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Category <span class="req">*</span></label>
+        <select id="f-cat" onchange="updateSubcats()">
+          <option value="">Select…</option>
+          <option>Guidelines</option>
+          <option>Burns</option>
+          <option>Ventilation</option>
+          <option>Cardiac</option>
+          <option>Neuro</option>
+          <option>GI</option>
+          <option>Liver / HPB</option>
+          <option>Sepsis</option>
+          <option>Renal</option>
+          <option>Antimicrobials &amp; stewardship</option>
+          <option>Analgesia</option>
+          <option>ECMO</option>
+          <option>Scoring &amp; prognostication</option>
+          <option>Line management</option>
+          <option>Eye care</option>
+          <option>Follow-up / family / PICS</option>
+          <option>Haematology &amp; oncology</option>
+          <option>Trauma</option>
+        </select>
+      </div>
+      <div class="field" id="subcat-wrap">
+        <label>Sub-category</label>
+        <select id="f-sub">
+          <option value="">None</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Document type <span class="req">*</span></label>
+        <select id="f-type">
+          <option value="">Select…</option>
+          <option value="guideline">Guideline</option>
+          <option value="paper">Paper / study</option>
+          <option value="protocol">Protocol</option>
+          <option value="review">Review</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Year</label>
+        <input type="number" id="f-year" placeholder="2024" min="1990" max="2099">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Authors / source</label>
+      <input type="text" id="f-authors" placeholder="e.g. Evans et al., NEJM  —  or  —  Hadassah GICU">
+    </div>
+
+    <div class="field">
+      <label>Google Drive / Doc link <span class="req">*</span></label>
+      <input type="url" id="f-url" placeholder="https://drive.google.com/file/d/…">
+      <div class="hint">Share the file, set to &ldquo;Anyone with the link&rdquo;, and paste the link here.</div>
+    </div>
+
+    <div class="field">
+      <label>Notes (optional)</label>
+      <textarea id="f-notes" placeholder="Any additional context, e.g. 'supersedes 2019 version'"></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Visibility</div>
+    <div class="pin-row">
+      <input type="checkbox" id="f-pinned" name="pinned">
+      <div>
+        <label for="f-pinned">&#128204; Pin as &ldquo;Must Read&rdquo;</label>
+        <small>Shown in the highlighted banner at the top of the site</small>
+      </div>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="submit-btn" onclick="submitForm()">Submit document</button>
+</div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzMpEMbP-W-DrsyTH3PQn6cHeiWFcFeIZ0_gk_YOgcFrZMAvEmrvuEh4OsbD7w6EC7F/exec';
+const UPLOAD_PASSWORD = 'gicu2024';
+
+const SUBCATS = {
+  'Guidelines': ['Hadassah','National Societies','Unit'],
+  'Ventilation': ['ARDS','Asthma','CAP / HAP','Bronchoscopy','Special circumstances','Tracheostomy','Intercostal drains'],
+  'Cardiac': ['Vasoactive agents','Fluids & fluid responsiveness','Perfusion','Monitoring'],
+  'Neuro': ['Delirium','Subarachnoid haemorrhage','Subdural haemorrhage','Trauma','Stroke','Intracerebral bleed'],
+  'GI': ['Gut failure','Feeding – TPN & enteral','Non-occlusive ischaemia','Diarrhoea','Large aspirates'],
+  'Liver / HPB': ['Cirrhosis – PHT / PPS','Varices','Ascites','Pancreatitis','Liver surgery / Whipples','Liver transplant'],
+  'Renal': ['AKI','CKD','RRT'],
+  'ECMO': ['VV ECMO','VA ECMO','CO₂ removal'],
+  'Haematology & oncology': ['Low platelets','Thalassaemia / sickle cell','Neutropenia','Cancer & ICU'],
+};
+
+function checkPass() {
+  const val = document.getElementById('pass-input').value;
+  if (val === UPLOAD_PASSWORD) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('form-screen').style.display = 'block';
+  } else {
+    document.getElementById('pass-error').style.display = 'block';
+    document.getElementById('pass-input').value = '';
+  }
+}
+
+function updateSubcats() {
+  const cat = document.getElementById('f-cat').value;
+  const sub = document.getElementById('f-sub');
+  const subs = SUBCATS[cat] || [];
+  sub.innerHTML = '<option value="">None</option>' + subs.map(s=>`<option>${s}</option>`).join('');
+  document.getElementById('subcat-wrap').style.opacity = subs.length ? '1' : '0.4';
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  t.style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if (type === 'success') setTimeout(()=>{ t.style.display='none'; }, 6000);
+}
+
+async function submitForm() {
+  const title = document.getElementById('f-title').value.trim();
+  const cat   = document.getElementById('f-cat').value;
+  const type  = document.getElementById('f-type').value;
+  const url   = document.getElementById('f-url').value.trim();
+
+  if (!title || !cat || !type || !url) {
+    showToast('Please fill in all required fields (marked with *).', 'error');
+    return;
+  }
+  if (!url.startsWith('http')) {
+    showToast('Please enter a valid URL starting with https://', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  const payload = {
+    title,
+    category: cat,
+    sub:      document.getElementById('f-sub').value,
+    type,
+    year:     document.getElementById('f-year').value,
+    authors:  document.getElementById('f-authors').value.trim(),
+    url,
+    pinned:   document.getElementById('f-pinned').checked ? 'yes' : 'no',
+    notes:    document.getElementById('f-notes').value.trim(),
+    submitted: new Date().toISOString(),
+  };
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+    });
+    showToast('Document submitted successfully! It will appear on the site within a minute.', 'success');
+    ['f-title','f-url','f-authors','f-notes','f-year'].forEach(id=>{ document.getElementById(id).value=''; });
+    document.getElementById('f-cat').value='';
+    document.getElementById('f-type').value='';
+    document.getElementById('f-sub').innerHTML='<option value="">None</option>';
+    document.getElementById('f-pinned').checked=false;
+  } catch(e) {
+    showToast('Submission failed. Check your connection or the Apps Script URL.', 'error');
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Submit document';
+}
+
+document.getElementById('pass-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkPass();
+});
+</script>
+</body>
+</html>

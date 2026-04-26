@@ -1,22 +1,282 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="manifest" href="./manifest.json" />
-<meta name="theme-color" content="#ffffff" />
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Hadassah GICU Guidelines</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hadassah GICU Guidelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f5f7;--surface:#fff;--border:#e2e5ea;--text:#1a1d23;--text2:#5a6172;--text3:#8a93a6;--accent:#0a4fa6;--accent-light:#e8f0fb;--accent2:#0d7a5f;--accent2-light:#e6f4f0;--warn:#b45309;--warn-light:#fef3c7;--radius:10px;--radius-sm:6px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
+header{background:var(--accent);color:#fff;padding:0 1rem;position:sticky;top:0;z-index:100;box-shadow:0 1px 8px rgba(0,0,0,.15)}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;gap:12px;height:56px}
+.header-logo{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500;letter-spacing:.08em;opacity:.85;white-space:nowrap}
+.header-title{font-size:16px;font-weight:600;flex:1}
+.header-badge{font-size:11px;font-weight:500;background:rgba(255,255,255,.15);padding:3px 9px;border-radius:20px;letter-spacing:.04em;white-space:nowrap}
+.header-upload{font-size:12px;font-weight:500;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);color:#fff;padding:5px 12px;border-radius:20px;text-decoration:none;white-space:nowrap;transition:background .15s}
+.header-upload:hover{background:rgba(255,255,255,.3)}
+.search-bar{background:#fff;border-bottom:1px solid var(--border);padding:10px 1rem;position:sticky;top:56px;z-index:90}
+.search-bar-inner{max-width:960px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.search-wrap{position:relative;flex:1}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
+.search-wrap input{width:100%;padding:8px 32px 8px 34px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s}
+.search-wrap input:focus{border-color:var(--accent);background:#fff}
+.search-wrap input::placeholder{color:var(--text3)}
+#clear-btn{position:absolute;right:9px;top:50%;transform:translateY(-50%);background:var(--text3);color:#fff;border:none;border-radius:50%;width:17px;height:17px;font-size:10px;cursor:pointer;display:none;align-items:center;justify-content:center}
+.main{max-width:960px;margin:0 auto;padding:1.25rem 1rem 3rem;display:flex;gap:1.25rem;align-items:flex-start}
+.sidebar{width:220px;flex-shrink:0;position:sticky;top:120px}
+@media(max-width:680px){.main{flex-direction:column}.sidebar{width:100%;position:static}}
+.sidebar-section{margin-bottom:1rem}
+.sidebar-label{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);padding:0 0 6px 2px}
+.tree{list-style:none}
+.tree-parent{margin-bottom:2px}
+.tree-parent-btn{display:flex;align-items:center;gap:6px;width:100%;background:none;border:none;padding:5px 8px;border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;color:var(--text2);text-align:left;transition:background .12s,color .12s}
+.tree-parent-btn:hover{background:var(--accent-light);color:var(--accent)}
+.tree-parent-btn.active{background:var(--accent-light);color:var(--accent)}
+.tree-parent-btn.all-btn{font-weight:600;color:var(--text)}
+.tree-parent-btn.all-btn.active{background:var(--accent);color:#fff}
+.tree-toggle{font-size:10px;color:var(--text3);transition:transform .15s;margin-left:auto;flex-shrink:0}
+.tree-toggle.open{transform:rotate(90deg)}
+.tree-children{list-style:none;padding-left:16px;display:none}
+.tree-children.open{display:block}
+.tree-child-btn{display:block;width:100%;background:none;border:none;padding:4px 8px;border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;font-size:12px;color:var(--text2);text-align:left;transition:background .12s,color .12s}
+.tree-child-btn:hover{background:var(--accent-light);color:var(--accent)}
+.tree-child-btn.active{background:var(--accent-light);color:var(--accent);font-weight:500}
+.content{flex:1;min-width:0}
+.pinned{background:var(--warn-light);border:1px solid #fcd34d;border-radius:var(--radius);padding:.9rem 1rem;margin-bottom:1.25rem}
+.pinned-label{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--warn);text-transform:uppercase;margin-bottom:8px}
+.pinned-chips{display:flex;flex-wrap:wrap;gap:6px}
+.pinned-chip{font-size:12px;color:var(--accent);background:#fff;border:1px solid #fcd34d;border-radius:20px;padding:3px 11px;text-decoration:none;font-weight:500;transition:background .15s}
+.pinned-chip:hover{background:var(--accent-light)}
+.results-bar{font-size:12px;color:var(--text3);margin-bottom:.75rem}
+.group{margin-bottom:1.5rem}
+.group-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.group-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.group-name{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text2);flex:1}
+.group-count{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace}
+.group-sub{font-size:10px;color:var(--text3);background:var(--bg);padding:1px 7px;border-radius:10px;border:1px solid var(--border)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;text-decoration:none;color:inherit;display:block;transition:border-color .15s,box-shadow .15s;position:relative}
+.card:hover{border-color:#bfcfe8;box-shadow:0 2px 10px rgba(10,79,166,.07)}
+.card-title{font-size:13.5px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:6px;padding-right:1.2rem}
+.card-meta{font-size:11px;color:var(--text3);display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.card-year{font-family:'IBM Plex Mono',monospace}
+.badge{padding:2px 6px;border-radius:3px;font-size:10px;font-weight:500}
+.b-guideline{background:var(--accent-light);color:var(--accent)}
+.b-paper{background:var(--accent2-light);color:var(--accent2)}
+.b-protocol{background:var(--warn-light);color:var(--warn)}
+.b-review{background:#f3e8ff;color:#6b21a8}
+.card-arrow{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;transition:color .15s}
+.card:hover .card-arrow{color:var(--accent)}
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3)}
+.empty p{font-size:14px;margin-top:.5rem}
+.loading{text-align:center;padding:3rem 1rem;color:var(--text3);font-size:14px}
+.error-box{background:#fef2f2;border:1px solid #fca5a5;border-radius:var(--radius);padding:1rem;font-size:13px;color:#991b1b;margin-bottom:1rem}
+footer{text-align:center;padding:1rem;font-size:12px;color:var(--text3);border-top:1px solid var(--border);background:var(--surface);margin-top:2rem}
+</style>
 </head>
-
 <body>
-  <h1>Hadassah GICU Guidelines</h1>
-  <p>If you see this, the app is running.</p>
-<script src="app.js"></script>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js");
-  }
-</script>
+<header>
+  <div class="header-inner">
+    <div class="header-logo">GICU</div>
+    <div class="header-title">Hadassah Guidelines</div>
+    <a href="upload.html" class="header-upload">+ Add document</a>
+    <div class="header-badge">For residents &amp; fellows</div>
+  </div>
+</header>
+<div class="search-bar">
+  <div class="search-bar-inner">
+    <div class="search-wrap">
+      <span class="search-icon">&#128269;</span>
+      <input type="text" id="search" placeholder="Search title, author, keyword…" autocomplete="off">
+      <button id="clear-btn" onclick="clearSearch()">&#10005;</button>
+    </div>
+  </div>
+</div>
+<div class="main">
+  <nav class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Browse</div>
+      <ul class="tree" id="tree"></ul>
+    </div>
+  </nav>
+  <div class="content">
+    <div class="pinned" id="pinned-section" style="display:none">
+      <div class="pinned-label">&#128204; Must read</div>
+      <div class="pinned-chips" id="pinned-chips"></div>
+    </div>
+    <div class="results-bar" id="results-bar"></div>
+    <div id="content"><div class="loading">Loading guidelines…</div></div>
+  </div>
+</div>
+<footer>Hadassah GICU &middot; For educational use only &middot; Links open external sources</footer>
 
+<script>
+const SHEET_ID = '15_SMjnqUksQsfZbkrlC2Z2IpY-npx7ykfpuffLLZwr8';
+const SHEET_NAME = 'Sheet1';
+
+const TAXONOMY = [
+  {name:'Guidelines',color:'#0a4fa6',sub:['Hadassah','National Societies','Unit']},
+  {name:'Burns',color:'#c2410c',sub:[]},
+  {name:'Ventilation',color:'#0d7a5f',sub:['ARDS','Asthma','CAP / HAP','Bronchoscopy','Special circumstances','Tracheostomy','Intercostal drains']},
+  {name:'Cardiac',color:'#be185d',sub:['Vasoactive agents','Fluids & fluid responsiveness','Perfusion','Monitoring']},
+  {name:'Neuro',color:'#6b21a8',sub:['Delirium','Subarachnoid haemorrhage','Subdural haemorrhage','Trauma','Stroke','Intracerebral bleed']},
+  {name:'GI',color:'#b45309',sub:['Gut failure','Feeding – TPN & enteral','Non-occlusive ischaemia','Diarrhoea','Large aspirates']},
+  {name:'Liver / HPB',color:'#7c3aed',sub:['Cirrhosis – PHT / PPS','Varices','Ascites','Pancreatitis','Liver surgery / Whipples','Liver transplant']},
+  {name:'Sepsis',color:'#991b1b',sub:[]},
+  {name:'Renal',color:'#0e7490',sub:['AKI','CKD','RRT']},
+  {name:'Antimicrobials & stewardship',color:'#166534',sub:[]},
+  {name:'Analgesia',color:'#4f46e5',sub:[]},
+  {name:'ECMO',color:'#0369a1',sub:['VV ECMO','VA ECMO','CO₂ removal']},
+  {name:'Scoring & prognostication',color:'#5a6172',sub:[]},
+  {name:'Line management',color:'#374151',sub:[]},
+  {name:'Eye care',color:'#374151',sub:[]},
+  {name:'Follow-up / family / PICS',color:'#374151',sub:[]},
+  {name:'Haematology & oncology',color:'#7c3aed',sub:['Low platelets','Thalassaemia / sickle cell','Neutropenia','Cancer & ICU']},
+  {name:'Trauma',color:'#991b1b',sub:[]},
+];
+
+const COLOR_MAP = {};
+TAXONOMY.forEach(t=>{ COLOR_MAP[t.name]=t.color; t.sub.forEach(s=>{ COLOR_MAP[s]=t.color; }); });
+
+let ALL_DOCS = [];
+let activeFilter = 'all';
+let searchTerm = '';
+
+async function loadData() {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+  try {
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.substring(47, text.length - 2));
+    const rows = json.table.rows;
+    ALL_DOCS = rows.map(r => ({
+      title:    r.c[0]?.v || '',
+      category: r.c[1]?.v || '',
+      sub:      r.c[2]?.v || '',
+      type:     (r.c[3]?.v || 'paper').toLowerCase(),
+      year:     r.c[4]?.v || '',
+      authors:  r.c[5]?.v || '',
+      url:      r.c[6]?.v || '',
+      pinned:   (r.c[7]?.v || '').toString().toLowerCase() === 'yes',
+    })).filter(d => d.title && d.url);
+    render();
+  } catch(e) {
+    document.getElementById('content').innerHTML = `<div class="error-box"><strong>Could not load data.</strong> Make sure your Google Sheet is published and the SHEET_ID is set correctly in index.html.<br><br>Error: ${e.message}</div>`;
+  }
+}
+
+function buildTree() {
+  const tree = document.getElementById('tree');
+  const allBtn = document.createElement('li');
+  allBtn.innerHTML = `<button class="tree-parent-btn all-btn active" onclick="setFilter('all',this)">All documents</button>`;
+  tree.appendChild(allBtn);
+  TAXONOMY.forEach(cat => {
+    const li = document.createElement('li');
+    li.className = 'tree-parent';
+    const hasChildren = cat.sub.length > 0;
+    li.innerHTML = `<button class="tree-parent-btn" onclick="setFilter('${cat.name}',this,event)" style="color:${cat.color}">
+      <span style="width:8px;height:8px;border-radius:50%;background:${cat.color};flex-shrink:0;display:inline-block"></span>
+      ${cat.name}
+      ${hasChildren ? '<span class="tree-toggle">&#9654;</span>' : ''}
+    </button>
+    ${hasChildren ? `<ul class="tree-children">${cat.sub.map(s=>`<li><button class="tree-child-btn" onclick="setFilter('${s}',this,event)">${s}</button></li>`).join('')}</ul>` : ''}`;
+    tree.appendChild(li);
+  });
+}
+
+function setFilter(key, btn, e) {
+  if (e) e.stopPropagation();
+  activeFilter = key;
+  document.querySelectorAll('.tree-parent-btn,.tree-child-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if (key !== 'all') {
+    const parent = btn.closest('.tree-parent');
+    if (parent) {
+      const ch = parent.querySelector('.tree-children');
+      if (ch) { ch.classList.add('open'); parent.querySelector('.tree-toggle')?.classList.add('open'); }
+    }
+  }
+  render();
+}
+
+function clearSearch() {
+  document.getElementById('search').value = '';
+  searchTerm = '';
+  document.getElementById('clear-btn').style.display = 'none';
+  render();
+}
+
+function badgeClass(t) {
+  return {guideline:'b-guideline',paper:'b-paper',protocol:'b-protocol',review:'b-review'}[t]||'b-paper';
+}
+
+function render() {
+  const q = searchTerm.toLowerCase();
+  let docs = ALL_DOCS.filter(d => {
+    const matchFilter = activeFilter === 'all' || d.category === activeFilter || d.sub === activeFilter;
+    const matchSearch = !q || [d.title,d.category,d.sub,d.authors].some(f=>(f||'').toLowerCase().includes(q));
+    return matchFilter && matchSearch;
+  });
+
+  const pinned = ALL_DOCS.filter(d=>d.pinned);
+  const pinnedSec = document.getElementById('pinned-section');
+  const pinnedChips = document.getElementById('pinned-chips');
+  if (pinned.length && activeFilter === 'all' && !q) {
+    pinnedSec.style.display = 'block';
+    pinnedChips.innerHTML = pinned.map(d=>`<a class="pinned-chip" href="${d.url}" target="_blank" rel="noopener">${d.title}</a>`).join('');
+  } else {
+    pinnedSec.style.display = 'none';
+  }
+
+  document.getElementById('results-bar').textContent = docs.length ? `${docs.length} document${docs.length>1?'s':''}` : '';
+
+  if (!docs.length) {
+    document.getElementById('content').innerHTML = '<div class="empty"><div style="font-size:2rem">&#128269;</div><p>No documents found.</p></div>';
+    return;
+  }
+
+  const groups = {};
+  docs.forEach(d => {
+    const key = d.sub || d.category;
+    if (!groups[key]) groups[key] = {label:key, parent:d.category, docs:[]};
+    groups[key].docs.push(d);
+  });
+
+  document.getElementById('content').innerHTML = Object.values(groups).map(g => {
+    const color = COLOR_MAP[g.label] || COLOR_MAP[g.parent] || '#5a6172';
+    const isSubcat = g.label !== g.parent && g.parent;
+    const cards = g.docs.map(d => `
+      <a class="card" href="${d.url}" target="_blank" rel="noopener">
+        <div class="card-title">${d.title}</div>
+        <div class="card-meta">
+          ${d.year ? `<span class="card-year">${d.year}</span>` : ''}
+          ${d.authors ? `<span>${d.authors}</span>` : ''}
+          <span class="badge ${badgeClass(d.type)}">${d.type}</span>
+        </div>
+        <span class="card-arrow">&#8594;</span>
+      </a>`).join('');
+    return `<div class="group">
+      <div class="group-header">
+        <div class="group-dot" style="background:${color}"></div>
+        <div class="group-name">${isSubcat ? g.parent+' &rsaquo; '+g.label : g.label}</div>
+        <div class="group-count">${g.docs.length}</div>
+      </div>
+      <div class="cards">${cards}</div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('search').addEventListener('input', function() {
+  searchTerm = this.value;
+  document.getElementById('clear-btn').style.display = this.value ? 'flex' : 'none';
+  render();
+});
+
+buildTree();
+loadData();
+</script>
 </body>
 </html>
